@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gokulites for Kidney Care</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 { font-size: 18px; font-weight: bold; }
+    nav { display: flex; gap: 20px; }
+    nav a { text-decoration: none; color: #333; font-weight: bold; }
+    nav a:hover { color: #2a7ae4; }
+    .hero {
+      background: url("hello.png") center/cover no-repeat;
+      height: 70vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .hero h2 { font-size: 2.5rem; margin: 0; background: rgba(0,0,0,0.5); padding: 10px 20px; border-radius: 8px; }
+    section { padding: 40px 20px; max-width: 900px; margin: auto; }
+    section h3 { font-size: 1.8rem; margin-bottom: 15px; color: #2a7ae4; }
+    .progress-container { background:#ddd; border-radius:10px; width:100%; height:30px; overflow:hidden; }
+    .progress-bar { background:#28a745; height:30px; width:50%; text-align:center; color:white; font-weight:bold; line-height:30px; }
+    footer { background:#222; color:#fff; text-align:center; padding:15px; margin-top:30px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>GOKULITES FOR KIDNEY CARE</h1>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#tracker">Tracker</a>
+    <a href="#search">Search</a>
+    <a href="admin.html">Admin</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <h2>Support Kidney Patients</h2>
+  <p>Join us to make a big impact</p>
+</section>
+
+<section id="about">
+  <h3>About Our Mission</h3>
+  <p>Gokulites for Kidney Care is a dedicated initiative led by students of 
+    <b>Sree Gokulam Public School</b>, aiming to raise funds for a local 
+    kidney patient in urgent need of a transplant.</p>
+</section>
+
+<section id="tracker">
+  <h3>Donation Progress</h3>
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar">50%</div>
+  </div>
+  <p id="progressText">₹50,000 raised of ₹1,00,000 goal</p>
+</section>
+
+<section id="search">
+  <h3>Search by Admission Number</h3>
+  <input type="text" id="searchBox" placeholder="Enter admission number">
+  <button onclick="searchDonation()">Search</button>
+  <p id="searchResult"></p>
+</section>
+
+<footer>
+  <p>© 2025 Gokulites for Kidney Care | All Rights Reserved</p>
+</footer>
+
+<script>
+async function searchDonation() {
+  const input = document.getElementById("searchBox").value;
+  let response = await fetch(`/api/search?admission=${input}`);
+  let data = await response.json();
+
+  if (data.results.length > 0) {
+    document.getElementById("searchResult").innerText =
+      `Admission ${input} - ₹${data.results[0].amount} collected.`;
+  } else {
+    document.getElementById("searchResult").innerText = "No record found.";
+  }
+}
+</script>
+
+</body>
+</html>
