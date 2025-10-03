@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin - Gokulites for Kidney Care</title>
   <style>
-    /* Reuse styles from main page */
     body {
       margin: 10px;
       font-family: Arial, sans-serif;
@@ -123,7 +122,6 @@
   </style>
 </head>
 <body>
-
 <header>
   <div class="header-texts">
     <h1>GOKULITES FOR KIDNEY CARE</h1>
@@ -135,7 +133,6 @@
     <a href="admin.html">Admin</a>
   </nav>
 </header>
-
 <div class="container">
   <h2>Admin Login</h2>
   <form class="login-form" id="loginForm">
@@ -144,7 +141,6 @@
     <button type="submit">Sign In</button>
     <div class="message" id="loginMsg"></div>
   </form>
-
   <div id="adminSection" style="display:none;">
     <h2>Enter Donation Details</h2>
     <form class="admin-form" id="donationForm">
@@ -154,7 +150,6 @@
       <button type="button" onclick="deleteDonation()">Delete Donation</button>
       <div class="message" id="donationMsg"></div>
     </form>
-
     <div class="top-classes">
       <h3>Class Leaderboard</h3>
       <table id="leaderTable">
@@ -164,39 +159,38 @@
             <th>Total Donated (₹)</th>
           </tr>
         </thead>
-        <tbody>
-          <!-- Filled via Python backend -->
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
   </div>
 </div>
-
 <footer>
   <p>© 2025 Gokulites for Kidney Care | All Rights Reserved</p>
 </footer>
-
 <script>
-  // Example login & form logic. Replace fetch URLs with your Python backend endpoints.
+  let userId = null;
   document.getElementById('loginForm').onsubmit = async function(e) {
     e.preventDefault();
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
-
-    // Example: Replace with your real backend login API
-    let resp = await fetch('/api/login', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({username, password})
-    });
-    let data = await resp.json();
-    if (data.success) {
-      document.getElementById('loginMsg').textContent = "";
-      document.getElementById('loginForm').style.display = "none";
-      document.getElementById('adminSection').style.display = "block";
-      loadLeaderboard();
-    } else {
-      document.getElementById('loginMsg').textContent = "Invalid username or password.";
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+      const result = await response.json();
+      if (response.ok && result.success) {
+        document.getElementById('loginMsg').textContent = '';
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('adminSection').style.display = '';
+        userId = result.user_id;
+        loadLeaderboard();
+      } else {
+        throw new Error(result.message || 'Login failed');
+      }
+    } catch (err) {
+      alert('Login error: ' + err.message);
     }
   };
 
@@ -204,48 +198,57 @@
     e.preventDefault();
     const admissionNo = document.getElementById('admissionNo').value;
     const amount = parseInt(document.getElementById('amount').value);
-    // Example: Replace with your real backend add-donation API
-    let resp = await fetch('/api/add_donation', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({admissionNo, amount})
-    });
-    let data = await resp.json();
-    if (data.success) {
-      document.getElementById('donationMsg').textContent = "Donation added!";
-      loadLeaderboard();
-    } else {
-      document.getElementById('donationMsg').textContent = "Error adding donation.";
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/add_donation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admissionNo, amount, userId }),
+      });
+      const result = await response.json();
+      if (response.ok && result.success) {
+        document.getElementById('donationMsg').textContent = 'Donation added!';
+        loadLeaderboard();
+      } else {
+        throw new Error(result.message || 'Error adding donation');
+      }
+    } catch (err) {
+      alert('Error: ' + err.message);
     }
   };
 
   async function deleteDonation() {
     const admissionNo = document.getElementById('admissionNo').value;
-    // Example: Replace with your real backend delete-donation API
-    let resp = await fetch('/api/delete_donation', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({admissionNo})
-    });
-    let data = await resp.json();
-    if (data.success) {
-      document.getElementById('donationMsg').textContent = "Donation deleted!";
-      loadLeaderboard();
-    } else {
-      document.getElementById('donationMsg').textContent = "Error deleting donation.";
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/delete_donation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admissionNo, userId }),
+      });
+      const result = await response.json();
+      if (response.ok && result.success) {
+        document.getElementById('donationMsg').textContent = 'Donation deleted!';
+        loadLeaderboard();
+      } else {
+        throw new Error(result.message || 'Error deleting donation');
+      }
+    } catch (err) {
+      alert('Error: ' + err.message);
     }
-  };
+  }
 
   async function loadLeaderboard() {
-    let resp = await fetch('/api/class_leaderboard');
-    let data = await resp.json();
-    let body = "";
-    data.classes.forEach(row => {
-      body += `<tr><td>${row.class}</td><td>₹${row.total}</td></tr>`;
-    });
-    document.querySelector('#leaderTable tbody').innerHTML = body;
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/class_leaderboard');
+      const data = await response.json();
+      const tbody = document.querySelector('#leaderTable tbody');
+      tbody.innerHTML = '';
+      data.classes.forEach(row => {
+        tbody.innerHTML += `<tr><td>${row.class}</td><td>₹${row.total}</td></tr>`;
+      });
+    } catch (err) {
+      alert('Failed to load leaderboard');
+    }
   }
 </script>
-
 </body>
 </html>
