@@ -1,10 +1,11 @@
-	<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Gokulites for Kidney Care</title>
   <style>
+    /* Your existing CSS */
     body {
       margin: 10px;
       font-family: Arial, sans-serif;
@@ -117,7 +118,7 @@
       stroke-width: 20;
       cx: 110;
       cy: 110;
-      r: 100;
+      r: 90;
     }
     #bgCircle {
       stroke: #ddd;
@@ -177,7 +178,6 @@
   </style>
 </head>
 <body>
-
 <header>
   <div class="header-texts">
     <h1>GOKULITES FOR KIDNEY CARE</h1>
@@ -236,12 +236,11 @@
 </footer>
 
 <script>
-  // Function to update the circular progress bar visually and textually
   function updateProgress(raised, goal) {
     const radius = 90;
     const circumference = 2 * Math.PI * radius;
     let percent = goal === 0 ? 0 : Math.round((raised / goal) * 100);
-    if(percent > 100) percent = 100; // Cap at 100%
+    if (percent > 100) percent = 100;
 
     let offset = circumference - (percent / 100) * circumference;
 
@@ -254,34 +253,31 @@
     document.getElementById("goalAmount").textContent = `Goal: ₹${goal.toLocaleString()}`;
   }
 
-  // Initialization example with your image data values:
-  const initialRaised = 25000; // Example amount raised
-  const initialGoal = 200000; // Example goal
-
+  const initialRaised = 25000;
+  const initialGoal = 200000;
   updateProgress(initialRaised, initialGoal);
 
   async function searchDonation() {
     const input = document.getElementById("searchBox").value.trim();
-    if(!input) {
+    if (!input) {
       document.getElementById("searchResult").innerText = "Please enter an admission number.";
       return;
     }
 
     try {
-      let response = await fetch(`/api/search?admission=${input}`);
+      let response = await fetch(`http://127.0.0.1:5000/api/search?admission=${input}`);
       let data = await response.json();
 
-      if(data.results && data.results.length > 0) {
-        document.getElementById("searchResult").innerText = 
+      if (data.results && data.results.length > 0) {
+        document.getElementById("searchResult").innerText =
           `Admission ${input} - ₹${data.results[0].amount.toLocaleString()} collected.`;
       } else {
         document.getElementById("searchResult").innerText = "No record found.";
       }
-    } catch(err) {
+    } catch (err) {
       document.getElementById("searchResult").innerText = "Error fetching data.";
     }
   }
 </script>
-
 </body>
 </html>
