@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gokulites for Kidney Care</title>
+  <style>
+    /* Base styles */
+    body {
+      margin: 10px;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    /* Header */
+    header {
+      background: white;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .header-texts {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .header-texts h1 {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+    }
+    .header-texts .subtext {
+      font-size: 14px;
+      color: #555;
+      font-weight: normal;
+      margin-top: 4px;
+    }
+    nav {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    nav a:hover {
+      color: #2a7ae4;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 60vh;
+      min-height: 300px;
+      background: url("hello.png") center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+    .hero-top {
+      position: absolute;
+      top: 15px;
+      width: 90%;
+      text-align: center;
+    }
+    .hero-top h2 {
+      font-size: 1.8rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin: 0 auto;
+      display: inline-block;
+    }
+    .hero-center {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      transform: translateY(-50%);
+      text-align: center;
+    }
+    .hero-center p {
+      font-size: 1.2rem;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin: 0 auto;
+      display: inline-block;
+    }
+
+    /* Sections */
+    section {
+      padding: 30px 15px;
+      max-width: 900px;
+      margin: auto;
+    }
+    section h3 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      color: #2a7ae4;
+      text-align: center;
+    }
+
+    /* About Section */
+    #about {
+      padding: 30px 20px;
+      background-color: #f0f8ff;
+      border-radius: 10px;
+    }
+    #about h2 {
+      text-align: center;
+      font-size: 1.8em;
+      color: #003366;
+    }
+    #about p {
+      font-size: 1em;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    /* Progress Circle */
+    #progressContainer {
+      margin: auto;
+      width: 180px;
+      height: 180px;
+      position: relative;
+      text-align: center;
+    }
+    svg {
+      transform: rotate(-90deg);
+      width: 180px;
+      height: 180px;
+    }
+    circle {
+      fill: none;
+      stroke-width: 16;
+      cx: 90;
+      cy: 90;
+      r: 70;
+    }
+    #bgCircle {
+      stroke: #ddd;
+    }
+    #progressCircle {
+      stroke: #28a745;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.6s ease;
+    }
+    #progressTextContainer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      color: #333;
+    }
+    #raisedAmount {
+      font-size: 22px;
+      margin: 0;
+    }
+    #percentText {
+      font-size: 18px;
+      margin: 4px 0;
+    }
+    #goalAmount {
+      font-size: 14px;
+      color: #555;
+      margin: 0;
+    }
+
+    /* Search Section */
+    #search {
+      text-align: center;
+    }
+    #search input {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #search button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #search button:hover {
+      background-color: #216e3a;
+    }
+    #searchResult {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    /* Class Leaderboard */
+    #classLeaderboard {
+      max-width: 100%;
+      margin: 25px auto;
+      padding: 12px;
+      background: #fafafa;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    #leaderTable {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    #leaderTable th, #leaderTable td {
+      padding: 10px;
+      border: 1px solid #eee;
+    }
+    #leaderTable th {
+      background: #e9f5e9;
+      color: #28a745;
+    }
+
+    /* Footer */
+    footer {
+      background: #222;
+      color: #fff;
+      padding: 15px 20px;
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      text-align: center;
+    }
+    footer div {
+      flex: 1;
+      padding: 4px 0;
+    }
+    footer .left {
+      text-align: left;
+    }
+    footer .center {
+      text-align: center;
+      font-style: italic;
+    }
+    footer .right {
+      text-align: right;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .hero-top h2 { font-size: 1.5rem; }
+      .hero-center p { font-size: 1rem; }
+      section { padding: 25px 15px; }
+      #progressContainer, svg { width: 160px; height: 160px; }
+      circle { cx: 80; cy: 80; r: 60; stroke-width: 14; }
+      #raisedAmount { font-size: 20px; }
+      #percentText { font-size: 16px; }
+      #goalAmount { font-size: 13px; }
+      nav { gap: 10px; }
+      nav a { font-size: 13px; }
+      .header-texts h1 { font-size: 18px; }
+      .header-texts .subtext { font-size: 12px; }
+    }
+
+    @media (max-width: 480px) {
+      header { padding: 10px; }
+      .hero { height: 50vh; }
+      .hero-top h2 { font-size: 1.3rem; padding: 6px 10px; }
+      .hero-center p { font-size: 0.95rem; padding: 6px 10px; }
+      #search input { width: 100%; max-width: 280px; }
+      footer { font-size: 11px; flex-direction: column; gap: 6px; }
+      footer div { text-align: center; }
+      footer .left, footer .right { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-texts">
+      <h1>GOKULITES FOR KIDNEY CARE</h1>
+      <div class="subtext">by 12 CS-Students 2025-26</div>
+    </div>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="knowmore.html">Know More</a>
+      <a href="#tracker">Tracker</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-top">
+      <h2>SUPPORT KIDNEY PATIENTS</h2>
+    </div>
+    <div class="hero-center">
+      <p>Together, we give hope and strength—<br>
+      uniting hearts to save a life<br>
+      with every donation.</p>
+    </div>
+  </section>
+
+  <section id="about">
+    <h2>About Us</h2>
+    <p>We, the proud students of <strong>Class 12A – Computer Science</strong>, stand together as a family of learners, dreamers, and achievers. Our class is more than just a group of students; it is a vibrant community where curiosity meets creativity, and dedication meets innovation. Every day, we strive to grow not just in knowledge, but also in values of unity, compassion, and excellence.</p>
+    <p>At the heart of our journey is <strong>Sree Gokulam Public School</strong>, a place that has shaped us into who we are today. The school is not just a building of bricks and classrooms, but a nurturing ground where our talents are discovered, our ideas are celebrated, and our ambitions are given wings. It has provided us countless opportunities to explore academics, arts, technology, and leadership, preparing us to step forward with confidence into the future.</p>
+    <p>We owe much of our success and spirit to our <strong>beloved teachers</strong>, who are more than guides – they are mentors, motivators, and true torchbearers of knowledge. With their patience, wisdom, and constant encouragement, they have not only taught us lessons from books but also valuable lessons of life.</p>
+    <p>As <strong>Class 12A</strong>, we believe in the power of collaboration, innovation, and service. This project is our way of giving back to society, proving that together, as Gokulites, we can use our skills and hearts to make a real difference. Our class stands united with the spirit of compassion, determined to spread hope and light to those in need.</p>
+  </section>
+
+  <section id="tracker">
+    <h3>Donation Progress</h3>
+    <div id="progressContainer">
+      <svg>
+        <circle id="bgCircle" cx="110" cy="110" r="90"></circle>
+        <circle id="progressCircle" cx="110" cy="110" r="90" stroke-dasharray="565.48" stroke-dashoffset="565.48"></circle>
+      </svg>
+      <div id="progressTextContainer">
+        <p id="raisedAmount">₹0</p>
+        <p id="percentText">0%</p>
+        <p id="goalAmount">Goal: ₹0</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="search">
+    <h3>Search by Admission Number</h3>
+    <input type="text" id="searchBox" placeholder="Enter admission number" />
+    <button onclick="searchDonation()">Search</button>
+    <p id="searchResult"></p>
+  </section>
+
+  <section id="classLeaderboard">
+    <h3>Class Leaderboard</h3>
+    <table id="leaderTable">
+      <thead>
+        <tr>
+          <th>Class</th>
+          <th>Total Donated (₹)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Loaded dynamically -->
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <div class="left">© 2025 Gokulites for Kidney Care | All Rights Reserved</div>
+    <div class="center">GOD BLESS GOKULAM I LOVE MY GOKULAM</div>
+    <div class="right">Made by Daniel Jenu Thayyil</div>
+  </footer>
+
+  <script>
+    const goalAmount = 200000;
+
+    function updateProgress(raised, goal) {
+      const radius = 90;
+      const circumference = 2 * Math.PI * radius;
+      let percent = goal === 0 ? 0 : Math.round((raised / goal) * 100);
+      if (percent > 100) percent = 100;
+      let offset = circumference - (percent / 100) * circumference;
+
+      const progressCircle = document.getElementById("progressCircle");
+      progressCircle.style.strokeDasharray = `${circumference}`;
+      progressCircle.style.strokeDashoffset = offset;
+
+      document.getElementById("raisedAmount").textContent = `₹${raised.toLocaleString()}`;
+      document.getElementById("percentText").textContent = `${percent}%`;
+      document.getElementById("goalAmount").textContent = `Goal: ₹${goal.toLocaleString()}`;
+    }
+
+    async function fetchTotalDonationsAndUpdate() {
+      try {
+        let response = await fetch("http://127.0.0.1:5000/api/total-donations");
+        let data = await response.json();
+        let raisedAmount = parseInt(data.total) || 0;
+        updateProgress(raisedAmount, goalAmount);
+      } catch (err) {
+        updateProgress(0, goalAmount);
+      }
+    }
+
+    async function searchDonation() {
+      const input = document.getElementById("searchBox").value.trim();
+      if (!input) {
+        document.getElementById("searchResult").innerText = "Please enter an admission number.";
+        return;
+      }
+      try {
+        let response = await fetch(`http://127.0.0.1:5000/api/search?admission=${input}`);
+        let data = await response.json();
+        if (data.total && data.total > 0) {
+          document.getElementById("searchResult").innerText =
+            `Admission ${input} - ₹${data.total.toLocaleString()} collected.`;
+        } else {
+          document.getElementById("searchResult").innerText = "No record found.";
+        }
+      } catch (err) {
+        document.getElementById("searchResult").innerText = "Error fetching data.";
+      }
+    }
+
+    async function loadLeaderboard() {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/class_leaderboard');
+        const data = await response.json();
+        const tbody = document.querySelector('#leaderTable tbody');
+        tbody.innerHTML = '';
+        data.classes.forEach(row => {
+          tbody.innerHTML += `<tr><td>${row.class}</td><td>₹${row.total}</td></tr>`;
+        });
+      } catch (err) {
+        alert('Failed to load leaderboard');
+      }
+    }
+
+    window.onload = () => {
+      fetchTotalDonationsAndUpdate();
+      loadLeaderboard();
+    };
+    setInterval(fetchTotalDonationsAndUpdate, 30000);
+  </script>
+</body>
+</html>
