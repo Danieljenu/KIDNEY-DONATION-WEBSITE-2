@@ -168,7 +168,6 @@
     #search button:hover {
       background-color: #216e3a;
     }
-
     /* Class Leaderboard Styles */
     #classLeaderboard {
       max-width: 600px;
@@ -191,7 +190,6 @@
       background: #e9f5e9;
       color: #28a745;
     }
-
     footer {
       background: #222;
       color: #fff;
@@ -271,7 +269,6 @@
   <p id="searchResult"></p>
 </section>
 
-<!-- Class Leaderboard Section Added -->
 <section id="classLeaderboard">
   <h3>Class Leaderboard</h3>
   <table id="leaderTable">
@@ -330,9 +327,9 @@
     try {
       let response = await fetch(`http://127.0.0.1:5000/api/search?admission=${input}`);
       let data = await response.json();
-      if (data.results && data.results.length > 0) {
+      if (data.total && data.total > 0) {
         document.getElementById("searchResult").innerText =
-          `Admission ${input} - ₹${data.results[0].amount.toLocaleString()} collected.`;
+          `Admission ${input} - ₹${data.total.toLocaleString()} collected.`;
       } else {
         document.getElementById("searchResult").innerText = "No record found.";
       }

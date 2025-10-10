@@ -3,18 +3,23 @@ from flask_cors import CORS
 import sqlite3
 import hashlib
 
+
 app = Flask(__name__)
 CORS(app)
 
+
 DB_NAME = 'donations.db'
+
 
 def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.row_factory = sqlite3.Row
     return conn
 
+
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
+
 
 def init_db():
     conn = get_db_connection()
@@ -39,6 +44,7 @@ def init_db():
     conn.commit()
     conn.close()
 
+
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
@@ -56,6 +62,7 @@ def login():
         return jsonify({"success": True, "class_name": user['class_name'], "user_id": user["id"]})
     else:
         return jsonify({"success": False, "message": "Invalid username or password"}), 401
+
 
 @app.route('/api/add_donation', methods=['POST'])
 def add_donation():
@@ -81,6 +88,7 @@ def add_donation():
     conn.close()
     return jsonify({"success": True})
 
+
 @app.route('/api/delete_donation', methods=['POST'])
 def delete_donation():
     data = request.json
@@ -102,20 +110,22 @@ def delete_donation():
     else:
         return jsonify({"success": False, "message": "Donation not found"}), 404
 
+
 @app.route('/api/search', methods=['GET'])
 def search():
     admission_no = request.args.get('admission')
     if not admission_no:
-        return jsonify({"results": []})
+        return jsonify({"total": 0})
 
     conn = get_db_connection()
-    rows = conn.execute('SELECT admission_no, amount FROM donations WHERE admission_no = ?', (admission_no,)).fetchall()
+    row = conn.execute('SELECT SUM(amount) as total FROM donations WHERE admission_no = ?', (admission_no,)).fetchone()
     conn.close()
 
-    results = [{"admission_no": r["admission_no"], "amount": r["amount"]} for r in rows]
-    return jsonify({"results": results})
+    total = row['total'] if row['total'] else 0
+    # returning numeric total only for clarity and consistency
+    return jsonify({"total": total})
 
-# Your total donations route integrated here
+
 @app.route('/api/total-donations')
 def total_donations():
     conn = get_db_connection()
@@ -125,6 +135,7 @@ def total_donations():
     conn.close()
     return jsonify({'total': total})
 
+
 @app.route('/api/progress', methods=['GET'])
 def progress():
     goal = 750000
@@ -132,8 +143,9 @@ def progress():
     row = conn.execute('SELECT SUM(amount) as total FROM donations').fetchone()
     conn.close()
     total = row['total'] if row['total'] else 0
-    percent = round((total/goal)*100) if goal else 0
+    percent = round((total / goal) * 100) if goal else 0
     return jsonify({"raised": total, "goal": goal, "percent": percent})
+
 
 @app.route('/api/class_leaderboard', methods=['GET'])
 def leaderboard():
