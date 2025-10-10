@@ -115,6 +115,16 @@ def search():
     results = [{"admission_no": r["admission_no"], "amount": r["amount"]} for r in rows]
     return jsonify({"results": results})
 
+# Your total donations route integrated here
+@app.route('/api/total-donations')
+def total_donations():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT SUM(amount) as total FROM donations')
+    total = cur.fetchone()['total'] or 0
+    conn.close()
+    return jsonify({'total': total})
+
 @app.route('/api/progress', methods=['GET'])
 def progress():
     goal = 750000
@@ -136,6 +146,7 @@ def leaderboard():
     conn.close()
     classes = [{"class": r["class"], "total": r["total"]} for r in rows]
     return jsonify({"classes": classes})
+
 
 if __name__ == '__main__':
     init_db()

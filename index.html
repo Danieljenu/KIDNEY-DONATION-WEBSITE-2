@@ -188,7 +188,7 @@
     <a href="#about">About</a>
     <a href="knowmore.html">Know More</a>
     <a href="#tracker">Tracker</a>
-      <a href="admin.html">Admin</a>
+    <a href="admin.html">Admin</a>
   </nav>
 </header>
 
@@ -204,26 +204,23 @@
 <section id="about" style="padding: 40px; background-color: #f0f8ff; border-radius: 10px;">
   <h2 style="text-align: center; font-size: 2em; color: #003366;">About Us</h2>
   <p style="font-size: 1.1em; line-height: 1.6; color: #333;">
-    We, the proud students of <strong>Class 12A – Computer Science</strong>, stand together as a family of learners, dreamers, and achievers. 
-    Our class is more than just a group of students; it is a vibrant community where curiosity meets creativity, and dedication meets innovation. 
+    We, the proud students of <strong>Class 12A – Computer Science</strong>, stand together as a family of learners, dreamers, and achievers.
+    Our class is more than just a group of students; it is a vibrant community where curiosity meets creativity, and dedication meets innovation.
     Every day, we strive to grow not just in knowledge, but also in values of unity, compassion, and excellence.
   </p>
-
   <p style="font-size: 1.1em; line-height: 1.6; color: #333;">
-    At the heart of our journey is <strong>Sree Gokulam Public School</strong>, a place that has shaped us into who we are today. 
-    The school is not just a building of bricks and classrooms, but a nurturing ground where our talents are discovered, 
-    our ideas are celebrated, and our ambitions are given wings. 
+    At the heart of our journey is <strong>Sree Gokulam Public School</strong>, a place that has shaped us into who we are today.
+    The school is not just a building of bricks and classrooms, but a nurturing ground where our talents are discovered,
+    our ideas are celebrated, and our ambitions are given wings.
     It has provided us countless opportunities to explore academics, arts, technology, and leadership, preparing us to step forward with confidence into the future.
   </p>
-
   <p style="font-size: 1.1em; line-height: 1.6; color: #333;">
-    We owe much of our success and spirit to our <strong>beloved teachers</strong>, who are more than guides – they are mentors, motivators, and true torchbearers of knowledge. 
+    We owe much of our success and spirit to our <strong>beloved teachers</strong>, who are more than guides – they are mentors, motivators, and true torchbearers of knowledge.
     With their patience, wisdom, and constant encouragement, they have not only taught us lessons from books but also valuable lessons of life.
   </p>
-
   <p style="font-size: 1.1em; line-height: 1.6; color: #333;">
-    As <strong>Class 12A</strong>, we believe in the power of collaboration, innovation, and service. 
-    This project is our way of giving back to society, proving that together, as Gokulites, we can use our skills and hearts to make a real difference. 
+    As <strong>Class 12A</strong>, we believe in the power of collaboration, innovation, and service.
+    This project is our way of giving back to society, proving that together, as Gokulites, we can use our skills and hearts to make a real difference.
     Our class stands united with the spirit of compassion, determined to spread hope and light to those in need.
   </p>
 </section>
@@ -255,12 +252,13 @@
 </footer>
 
 <script>
+  const goalAmount = 200000;
+
   function updateProgress(raised, goal) {
     const radius = 90;
     const circumference = 2 * Math.PI * radius;
     let percent = goal === 0 ? 0 : Math.round((raised / goal) * 100);
     if (percent > 100) percent = 100;
-
     let offset = circumference - (percent / 100) * circumference;
 
     const progressCircle = document.getElementById("progressCircle");
@@ -272,9 +270,19 @@
     document.getElementById("goalAmount").textContent = `Goal: ₹${goal.toLocaleString()}`;
   }
 
-  const initialRaised = 25000;
-  const initialGoal = 200000;
-  updateProgress(initialRaised, initialGoal);
+  async function fetchTotalDonationsAndUpdate() {
+    try {
+      let response = await fetch("http://127.0.0.1:5000/api/total-donations");
+      let data = await response.json();
+      let raisedAmount = parseInt(data.total) || 0;
+      updateProgress(raisedAmount, goalAmount);
+    } catch (err) {
+      updateProgress(0, goalAmount);
+    }
+  }
+
+  window.onload = fetchTotalDonationsAndUpdate;
+  setInterval(fetchTotalDonationsAndUpdate, 30000);
 
   async function searchDonation() {
     const input = document.getElementById("searchBox").value.trim();
@@ -282,11 +290,9 @@
       document.getElementById("searchResult").innerText = "Please enter an admission number.";
       return;
     }
-
     try {
       let response = await fetch(`http://127.0.0.1:5000/api/search?admission=${input}`);
       let data = await response.json();
-
       if (data.results && data.results.length > 0) {
         document.getElementById("searchResult").innerText =
           `Admission ${input} - ₹${data.results[0].amount.toLocaleString()} collected.`;
