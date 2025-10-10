@@ -169,8 +169,12 @@
 </footer>
 <script>
   let userId = null;
+  const loginMsg = document.getElementById('loginMsg');
+  const donationMsg = document.getElementById('donationMsg');
+
   document.getElementById('loginForm').onsubmit = async function(e) {
     e.preventDefault();
+    loginMsg.textContent = '';
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
     try {
@@ -181,21 +185,23 @@
       });
       const result = await response.json();
       if (response.ok && result.success) {
-        document.getElementById('loginMsg').textContent = '';
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('adminSection').style.display = '';
         userId = result.user_id;
         loadLeaderboard();
       } else {
-        throw new Error(result.message || 'Login failed');
+        loginMsg.textContent = result.message || 'Invalid username or password';
+        loginMsg.style.color = "red";
       }
     } catch (err) {
-      alert('Login error: ' + err.message);
+      loginMsg.textContent = 'Login error: ' + err.message;
+      loginMsg.style.color = "red";
     }
   };
 
   document.getElementById('donationForm').onsubmit = async function(e) {
     e.preventDefault();
+    donationMsg.textContent = '';
     const admissionNo = document.getElementById('admissionNo').value;
     const amount = parseInt(document.getElementById('amount').value);
     try {
@@ -206,17 +212,21 @@
       });
       const result = await response.json();
       if (response.ok && result.success) {
-        document.getElementById('donationMsg').textContent = 'Donation added!';
+        donationMsg.textContent = 'Donation added!';
+        donationMsg.style.color = "green";
         loadLeaderboard();
       } else {
-        throw new Error(result.message || 'Error adding donation');
+        donationMsg.textContent = result.message || 'Error adding donation';
+        donationMsg.style.color = "red";
       }
     } catch (err) {
-      alert('Error: ' + err.message);
+      donationMsg.textContent = 'Error: ' + err.message;
+      donationMsg.style.color = "red";
     }
   };
 
   async function deleteDonation() {
+    donationMsg.textContent = '';
     const admissionNo = document.getElementById('admissionNo').value;
     try {
       const response = await fetch('http://127.0.0.1:5000/api/delete_donation', {
@@ -226,13 +236,16 @@
       });
       const result = await response.json();
       if (response.ok && result.success) {
-        document.getElementById('donationMsg').textContent = 'Donation deleted!';
+        donationMsg.textContent = 'Donation deleted!';
+        donationMsg.style.color = "green";
         loadLeaderboard();
       } else {
-        throw new Error(result.message || 'Error deleting donation');
+        donationMsg.textContent = result.message || 'Error deleting donation';
+        donationMsg.style.color = "red";
       }
     } catch (err) {
-      alert('Error: ' + err.message);
+      donationMsg.textContent = 'Error: ' + err.message;
+      donationMsg.style.color = "red";
     }
   }
 
@@ -252,3 +265,4 @@
 </script>
 </body>
 </html>
+  
