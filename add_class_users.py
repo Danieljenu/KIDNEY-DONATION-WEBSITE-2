@@ -20,6 +20,7 @@ def add_user(username, password, class_name):
     finally:
         conn.close()
 
+        
 if __name__ == '__main__':
     password = "password123"
     for i in range(1, 13):
