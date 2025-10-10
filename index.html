@@ -168,6 +168,30 @@
     #search button:hover {
       background-color: #216e3a;
     }
+
+    /* Class Leaderboard Styles */
+    #classLeaderboard {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 12px;
+      background: #fafafa;
+      border-radius: 8px;
+    }
+    #classLeaderboard table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    #classLeaderboard th, #classLeaderboard td {
+      padding: 12px;
+      border: 1px solid #eee;
+      font-size: 16px;
+    }
+    #classLeaderboard th {
+      background: #e9f5e9;
+      color: #28a745;
+    }
+
     footer {
       background: #222;
       color: #fff;
@@ -247,6 +271,22 @@
   <p id="searchResult"></p>
 </section>
 
+<!-- Class Leaderboard Section Added -->
+<section id="classLeaderboard">
+  <h3>Class Leaderboard</h3>
+  <table id="leaderTable">
+    <thead>
+      <tr>
+        <th>Class</th>
+        <th>Total Donated (₹)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Loaded dynamically -->
+    </tbody>
+  </table>
+</section>
+
 <footer>
   <p>© 2025 Gokulites for Kidney Care | All Rights Reserved</p>
 </footer>
@@ -281,9 +321,6 @@
     }
   }
 
-  window.onload = fetchTotalDonationsAndUpdate;
-  setInterval(fetchTotalDonationsAndUpdate, 30000);
-
   async function searchDonation() {
     const input = document.getElementById("searchBox").value.trim();
     if (!input) {
@@ -303,6 +340,26 @@
       document.getElementById("searchResult").innerText = "Error fetching data.";
     }
   }
+
+  async function loadLeaderboard() {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/api/class_leaderboard');
+      const data = await response.json();
+      const tbody = document.querySelector('#leaderTable tbody');
+      tbody.innerHTML = '';
+      data.classes.forEach(row => {
+        tbody.innerHTML += `<tr><td>${row.class}</td><td>₹${row.total}</td></tr>`;
+      });
+    } catch (err) {
+      alert('Failed to load leaderboard');
+    }
+  }
+
+  window.onload = () => {
+    fetchTotalDonationsAndUpdate();
+    loadLeaderboard();
+  };
+  setInterval(fetchTotalDonationsAndUpdate, 30000);
 </script>
 
 </body>
